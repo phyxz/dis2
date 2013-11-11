@@ -10,34 +10,38 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 public class RentalStore {
 
+    @PersistenceContext
+    static EntityManager em;
     private static Map<String, CarRentalCompany> rentals;
 
-    public static CarRentalCompany getRental(String company) throws ReservationException {
-        CarRentalCompany out = RentalStore.getRentals().get(company);
-        if (out == null) {
-            throw new ReservationException("Company doesn't exist!: " + company);
-        }
-        return out;
-    }
-
-    public static synchronized Map<String, CarRentalCompany> getRentals() {
-        if (rentals == null) {
-            rentals = new HashMap<String, CarRentalCompany>();
-            loadRental("Hertz", "hertz.csv");
-            loadRental("Dockx", "dockx.csv");
-        }
-        return rentals;
-    }
+//    public static CarRentalCompany getRental(String company) throws ReservationException {
+//        CarRentalCompany out = RentalStore.getRentals().get(company);
+//        if (out == null) {
+//            throw new ReservationException("Company doesn't exist!: " + company);
+//        }
+//        return out;
+//    }
+//
+//    public static synchronized Map<String, CarRentalCompany> getRentals() {
+//        if (rentals == null) {
+//            rentals = new HashMap<String, CarRentalCompany>();
+//            loadRental("Hertz", "hertz.csv");
+//            loadRental("Dockx", "dockx.csv");
+//        }
+//        return rentals;
+//    }
 
     public static void loadRental(String name, String datafile) {
         Logger.getLogger(RentalStore.class.getName()).log(Level.INFO, "loading {0} from file {1}", new Object[]{name, datafile});
         try {
             List<Car> cars = loadData(datafile);
             CarRentalCompany company = new CarRentalCompany(name, cars);
-            rentals.put(name, company);
+            em.persist(company);
         } catch (NumberFormatException ex) {
             Logger.getLogger(RentalStore.class.getName()).log(Level.SEVERE, "bad file", ex);
         } catch (IOException ex) {

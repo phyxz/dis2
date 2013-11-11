@@ -26,7 +26,7 @@ public class ManagerSession implements ManagerSessionRemote {
     }
 
     @Override
-    public Set<Integer> getCars(String company, String type) {
+    public Set<Integer> getCarIds(String company, String type) {
         Set<Integer> out = new HashSet<Integer>();
         try {
             for(Car c: RentalStore.getRental(company).getCars(type)){
@@ -40,17 +40,17 @@ public class ManagerSession implements ManagerSessionRemote {
     }
 
     @Override
-    public Set<Reservation> getReservations(String company, String type, int id) {
+    public int getNumberOfReservations(String company, String type, int id) {
         try {
-            return RentalStore.getRental(company).getCar(id).getReservations();
+            return RentalStore.getRental(company).getCar(id).getReservations().size();
         } catch (ReservationException ex) {
             Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+            return 0;
         }
     }
 
     @Override
-    public Set<Reservation> getReservations(String company, String type) {
+    public int getNumberOfReservations(String company, String type) {
         Set<Reservation> out = new HashSet<Reservation>();
         try {
             for(Car c: RentalStore.getRental(company).getCars(type)){
@@ -58,17 +58,32 @@ public class ManagerSession implements ManagerSessionRemote {
             }
         } catch (ReservationException ex) {
             Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+            return 0;
         }
-        return out;
+        return out.size();
     }
 
     @Override
-    public Set<Reservation> getReservationsBy(String renter) {
+    public int getNumberOfReservationsBy(String renter) {
         Set<Reservation> out = new HashSet<Reservation>();
         for(CarRentalCompany crc : RentalStore.getRentals().values()) {
             out.addAll(crc.getReservationsBy(renter));
         }
-        return out;
+        return out.size();
+    }
+
+    @Override
+    public void loadRentalCompany(String name, String datafile) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void addCarType(String name, int nbOfSeats, boolean smokingAllowed, double RentalPricePerDay, float trunkspace) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void addCar(String CarRentalCompanyName, int uid, CarType type) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

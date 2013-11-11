@@ -6,10 +6,15 @@ import javax.persistence.Id;
 @Entity
 public class Reservation extends Quote {
 
+    @Id
     private int carId;
     
-    @Id
-    private Long id;
+    
+
+    
+    public Reservation() {
+        super();
+    }
     
     /***************
      * CONSTRUCTOR *

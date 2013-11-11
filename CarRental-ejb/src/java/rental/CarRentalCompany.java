@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 
@@ -24,7 +25,7 @@ public class CarRentalCompany {
     @OneToMany
     private List<Car> cars;
     
-    @OneToMany
+    @ManyToMany
     private Set<CarType> carTypes = new HashSet<CarType>();
 
     
