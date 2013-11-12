@@ -8,7 +8,7 @@ import java.util.Set;
 import javax.ejb.Stateful;
 import rental.CarType;
 import rental.Quote;
-import rental.RentalStore;
+import rental.Loader;
 import rental.Reservation;
 import rental.ReservationConstraints;
 import rental.ReservationException;
@@ -21,14 +21,14 @@ public class CarRentalSession implements CarRentalSessionRemote {
 
     @Override
     public Set<String> getAllRentalCompanies() {
-        return new HashSet<String>(RentalStore.getRentals().keySet());
+        return new HashSet<String>(Loader.getRentals().keySet());
     }
     
     @Override
     public List<CarType> getAvailableCarTypes(Date start, Date end) {
         List<CarType> availableCarTypes = new LinkedList<CarType>();
         for(String crc : getAllRentalCompanies()) {
-            for(CarType ct : RentalStore.getRentals().get(crc).getAvailableCarTypes(start, end)) {
+            for(CarType ct : Loader.getRentals().get(crc).getAvailableCarTypes(start, end)) {
                 if(!availableCarTypes.contains(ct))
                     availableCarTypes.add(ct);
             }
@@ -38,7 +38,7 @@ public class CarRentalSession implements CarRentalSessionRemote {
 
     @Override
     public Quote createQuote(String company, ReservationConstraints constraints) throws ReservationException {
-        Quote out = RentalStore.getRental(company).createQuote(constraints, renter);
+        Quote out = Loader.getRental(company).createQuote(constraints, renter);
         quotes.add(out);
         return out;
     }
@@ -53,11 +53,11 @@ public class CarRentalSession implements CarRentalSessionRemote {
         List<Reservation> done = new LinkedList<Reservation>();
         try {
             for (Quote quote : quotes) {
-                done.add(RentalStore.getRental(quote.getRentalCompany()).confirmQuote(quote));
+                done.add(Loader.getRental(quote.getRentalCompany()).confirmQuote(quote));
             }
         } catch (ReservationException e) {
             for(Reservation r:done)
-                RentalStore.getRental(r.getRentalCompany()).cancelReservation(r);
+                Loader.getRental(r.getRentalCompany()).cancelReservation(r);
             throw e;
         }
         return done;

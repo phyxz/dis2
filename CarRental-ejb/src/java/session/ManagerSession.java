@@ -8,7 +8,7 @@ import javax.ejb.Stateless;
 import rental.Car;
 import rental.CarRentalCompany;
 import rental.CarType;
-import rental.RentalStore;
+import rental.Loader;
 import rental.Reservation;
 import rental.ReservationException;
 
@@ -18,7 +18,7 @@ public class ManagerSession implements ManagerSessionRemote {
     @Override
     public Set<CarType> getCarTypes(String company) {
         try {
-            return new HashSet<CarType>(RentalStore.getRental(company).getAllTypes());
+            return new HashSet<CarType>(Loader.getRental(company).getAllTypes());
         } catch (ReservationException ex) {
             Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -29,7 +29,7 @@ public class ManagerSession implements ManagerSessionRemote {
     public Set<Integer> getCarIds(String company, String type) {
         Set<Integer> out = new HashSet<Integer>();
         try {
-            for(Car c: RentalStore.getRental(company).getCars(type)){
+            for(Car c: Loader.getRental(company).getCars(type)){
                 out.add(c.getId());
             }
         } catch (ReservationException ex) {
@@ -42,7 +42,7 @@ public class ManagerSession implements ManagerSessionRemote {
     @Override
     public int getNumberOfReservations(String company, String type, int id) {
         try {
-            return RentalStore.getRental(company).getCar(id).getReservations().size();
+            return Loader.getRental(company).getCar(id).getReservations().size();
         } catch (ReservationException ex) {
             Logger.getLogger(ManagerSession.class.getName()).log(Level.SEVERE, null, ex);
             return 0;
@@ -53,7 +53,7 @@ public class ManagerSession implements ManagerSessionRemote {
     public int getNumberOfReservations(String company, String type) {
         Set<Reservation> out = new HashSet<Reservation>();
         try {
-            for(Car c: RentalStore.getRental(company).getCars(type)){
+            for(Car c: Loader.getRental(company).getCars(type)){
                 out.addAll(c.getReservations());
             }
         } catch (ReservationException ex) {
@@ -66,7 +66,7 @@ public class ManagerSession implements ManagerSessionRemote {
     @Override
     public int getNumberOfReservationsBy(String renter) {
         Set<Reservation> out = new HashSet<Reservation>();
-        for(CarRentalCompany crc : RentalStore.getRentals().values()) {
+        for(CarRentalCompany crc : Loader.getRentals().values()) {
             out.addAll(crc.getReservationsBy(renter));
         }
         return out.size();
@@ -74,12 +74,12 @@ public class ManagerSession implements ManagerSessionRemote {
 
     @Override
     public void loadRentalCompany(String name, String datafile) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Loader.loadRental(name, datafile); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void addCarType(String name, int nbOfSeats, boolean smokingAllowed, double RentalPricePerDay, float trunkspace) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        CarType carType = new CarType(); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override

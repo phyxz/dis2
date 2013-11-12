@@ -3,7 +3,10 @@ package rental;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import javax.annotation.Generated;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -12,6 +15,7 @@ import javax.persistence.OneToOne;
 public class Car {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     
     @OneToOne
@@ -29,8 +33,7 @@ public class Car {
     public Car() {
     }
     
-    public Car(int uid, CarType type) {
-    	this.id = uid;
+    public Car(CarType type) {
         this.type = type;
         this.reservations = new HashSet<Reservation>();
     }
