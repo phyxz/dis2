@@ -8,6 +8,10 @@ import javax.persistence.Id;
 public class CarType implements Serializable{
     
     private String name;
+    
+    private String  cRentalCompanyName;
+
+   
     private int nbOfSeats;
     private boolean smokingAllowed;
     private double rentalPricePerDay;
@@ -25,7 +29,7 @@ public class CarType implements Serializable{
      * CONSTRUCTOR *
      ***************/
     
-    public CarType(String name, int nbOfSeats, float trunkSpace, double rentalPricePerDay, boolean smokingAllowed) {
+    public CarType(String name, int nbOfSeats, float trunkSpace, double rentalPricePerDay, boolean smokingAllowed ){
         this.name = name;
         this.nbOfSeats = nbOfSeats;
         this.trunkSpace = trunkSpace;
@@ -115,4 +119,13 @@ public class CarType implements Serializable{
     public void setId(Long id) {
         this.id = id;
     }
+    
+     public String getcRentalCompanyName() {
+        return cRentalCompanyName;
+    }
+
+    public void setcRentalCompanyName(String cRentalCompanyName) {
+        this.cRentalCompanyName = cRentalCompanyName;
+    }
+    
 }

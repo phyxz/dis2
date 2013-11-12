@@ -24,5 +24,5 @@ public interface ManagerSessionRemote {
             double RentalPricePerDay, float trunkspace);
     
     // moet id nog gegeven worden ????
-    public void addCar(String CarRentalCompanyName, int uid, CarType type);
+    public void addCar(String CarRentalCompanyName, CarType type);
 }

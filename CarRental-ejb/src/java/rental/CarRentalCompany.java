@@ -11,10 +11,19 @@ import java.util.logging.Logger;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 
+
 @Entity
+@NamedQueries({
+    @NamedQuery(name="rental.CarRentalCompany.getCarTypes", 
+        query="SELECT ct FROM CarType ct WHERE ct.cRentalCompanyName = :name"),
+    @NamedQuery(name="rental.CarRentalCompany.getCarIDs", 
+        query="SELECT c.id FROM Car c, CarRentalCompany com IN(com.cars) WHERE c.type = :carType")
+})
 public class CarRentalCompany {
 
     private static Logger logger = Logger.getLogger(CarRentalCompany.class.getName());

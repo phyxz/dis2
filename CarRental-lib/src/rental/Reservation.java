@@ -6,8 +6,11 @@ import javax.persistence.Id;
 @Entity
 public class Reservation extends Quote {
 
-    @Id
+
     private int carId;
+    
+    @Id
+    private int id;
     
     
 
@@ -44,11 +47,11 @@ public class Reservation extends Quote {
                 getCarRenter(), getStartDate(), getEndDate(), getRentalCompany(), getCarType(), getCarId(), getRentalPrice());
     }	
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 }
