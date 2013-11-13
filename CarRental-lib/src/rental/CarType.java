@@ -16,6 +16,15 @@ public class CarType implements Serializable{
     private double rentalPricePerDay;
     //trunk space in liters
     private float trunkSpace;
+    private String crcName;
+
+    public String getCrcName() {
+        return crcName;
+    }
+
+    public void setCrcName(String crcName) {
+        this.crcName = crcName;
+    }
 
     
     @Id

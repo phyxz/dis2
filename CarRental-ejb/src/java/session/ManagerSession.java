@@ -30,9 +30,9 @@ public class ManagerSession implements ManagerSessionRemote {
     public Set<CarType> getCarTypes(String company) {
         try {
             List<CarType> results = null;
-            //results = em.createNamedQuery("rental.CarRentalCompany.getCarTypes")
-            //                                            .setParameter("name", company)
-            //                                            .getResultList();
+            results = em.createNamedQuery("rental.CarRentalCompany.getCarTypes")
+                                                        .setParameter("name", company)
+                                                        .getResultList();
             
             return new HashSet<CarType>(results);
         } catch (IllegalArgumentException ex) {
@@ -45,7 +45,8 @@ public class ManagerSession implements ManagerSessionRemote {
     public Set<Integer> getCarIds(String company, String type) {
         Set<Integer> out = new HashSet<Integer>();
         try {
-            CarRentalCompany ccompany = em.find(CarRentalCompany.class, company);
+            CarRentalCompany ccompany = (CarRentalCompany) 
+                    em.createNamedQuery("rental.CarRentalCompany.getCompany").getSingleResult();
             for(Car c: ccompany.getCars(type)){
                 out.add(c.getId());
             }
@@ -59,7 +60,9 @@ public class ManagerSession implements ManagerSessionRemote {
     @Override
     public int getNumberOfReservations(String company, String type, int id) {
         try {
-            return em.find(CarRentalCompany.class, company).getCar(id).getReservations().size();
+             CarRentalCompany ccompany = (CarRentalCompany) 
+                    em.createNamedQuery("rental.CarRentalCompany.getCompany").getSingleResult();
+            return ccompany.getCar(id).getReservations().size();
         } catch (IllegalArgumentException ex) {
             logger.log(Level.SEVERE, null, ex);
             return 0;
@@ -70,7 +73,8 @@ public class ManagerSession implements ManagerSessionRemote {
     public int getNumberOfReservations(String company, String type) {
         Set<Reservation> out = new HashSet<Reservation>();
         try {
-            CarRentalCompany ccompany = em.find(CarRentalCompany.class, company);
+             CarRentalCompany ccompany = (CarRentalCompany) 
+                    em.createNamedQuery("rental.CarRentalCompany.getCompany").getSingleResult();
             for(Car c: ccompany.getCars(type)){
                 out.addAll(c.getReservations());
             }
@@ -86,10 +90,10 @@ public class ManagerSession implements ManagerSessionRemote {
         Set<Reservation> out = new HashSet<Reservation>();
         
         List<CarRentalCompany> companies = null;
-        //companies = (List<CarRentalCompany>) em.createQuery("rental.CarRentalCompany.findAllCompanies").getResultList();
-        //for(CarRentalCompany d : companies) {
-        //    out.addAll(d.getReservationsBy(renter));
-    //}
+        companies = (List<CarRentalCompany>) em.createNamedQuery("rental.CarRentalCompany.getAllCompanies").getResultList();
+        for(CarRentalCompany d : companies) {
+            out.addAll(d.getReservationsBy(renter));
+    }
             return out.size();
     }
 
@@ -110,7 +114,8 @@ public class ManagerSession implements ManagerSessionRemote {
     @Override
     public void addCarType(String name, int nbOfSeats, boolean smokingAllowed, double rentalPricePerDay, float trunkspace) {
         //String name, int nbOfSeats, float trunkSpace, double rentalPricePerDay, boolean smokingAllowed 
-        CarType carType = new CarType(name,nbOfSeats,trunkspace,rentalPricePerDay, smokingAllowed); //To change body of generated methods, choose Tools | Templates.
+        CarType carType = new CarType(name,nbOfSeats,trunkspace,rentalPricePerDay, smokingAllowed);
+        em.persist(carType);//To change body of generated methods, choose Tools | Templates.
     }
     
      public static List<Car> loadData(String datafile)
