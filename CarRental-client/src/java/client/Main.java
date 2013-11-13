@@ -1,5 +1,6 @@
 package client;
 
+import java.lang.reflect.Array;
 import java.util.Date;
 import javax.naming.InitialContext;
 import rental.CarType;
@@ -14,8 +15,17 @@ public class Main extends AbstractScriptedTripTest<CarRentalSessionRemote, Manag
     }
 
     public static void main(String[] args) throws Exception {
-        //TODO: use updated manager interface to load cars into companies
-        new Main("trips").run();
+        Main m = new Main("trips");
+        ManagerSessionRemote mgr = m.getNewManagerSession("Dockx","Dockx");
+        mgr.loadRentalCompany("Dockx", "dockx.csv");
+        mgr = m.getNewManagerSession("Hertz","Hertz");
+        mgr.loadRentalCompany("Hertz", "hertz.csv");
+        //m.run();
+        CarRentalSessionRemote crs = m.getNewReservationSession("test");
+        for(String s : crs.getAllRentalCompanies()) {
+            System.out.println(s);
+        }
+        
     }
     
     @Override
@@ -70,4 +80,6 @@ public class Main extends AbstractScriptedTripTest<CarRentalSessionRemote, Manag
         System.err.println("To be implemented.");
         return null;
     }
+    
+    
 }

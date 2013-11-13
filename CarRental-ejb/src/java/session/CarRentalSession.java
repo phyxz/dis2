@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import rental.CarRentalCompany;
 import rental.CarType;
 import rental.Quote;
 import rental.Reservation;
@@ -25,27 +26,26 @@ public class CarRentalSession implements CarRentalSessionRemote {
 
     @Override
     public Set<String> getAllRentalCompanies() {
-        //return new HashSet<String>(Loader.getRentals().keySet());
-        return null;
+        List<String> companies = null;
+        companies = (List<String>) em.createNamedQuery("rental.CarRentalCompany.getAllCompanies").getResultList();
+        return new HashSet<String>(companies);
     }
     
     @Override
     public List<CarType> getAvailableCarTypes(Date start, Date end) {
-        List<CarType> availableCarTypes = new LinkedList<CarType>();
-//        for(String crc : getAllRentalCompanies()) {
-//            for(CarType ct : Loader.getRentals().get(crc).getAvailableCarTypes(start, end)) {
-//                if(!availableCarTypes.contains(ct))
-//                    availableCarTypes.add(ct);
-//            }
-//        }
-        return availableCarTypes;
+       List<CarType> cartypes = null;
+        //companies = (List<CarType>) em.createNamedQuery("rental.CarRentalCompany.getAllCompanies").getResultList();
+        return cartypes;
     }
 
     @Override
     public Quote createQuote(String company, ReservationConstraints constraints) throws ReservationException {
-        //Quote out = Loader.getRental(company).createQuote(constraints, renter);
-        //quotes.add(out);
-        return null;
+        CarRentalCompany crc = (CarRentalCompany) em.createNamedQuery("rental.CarRentalCompany.getAllCompanies")
+                                                    .setParameter("name", company)
+                                                    .getSingleResult();
+        Quote out = crc.createQuote(constraints, renter);
+        quotes.add(out);
+        return out;
     }
 
     @Override

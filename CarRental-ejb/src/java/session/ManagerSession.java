@@ -30,9 +30,9 @@ public class ManagerSession implements ManagerSessionRemote {
     public Set<CarType> getCarTypes(String company) {
         try {
             List<CarType> results = null;
-            results = em.createNamedQuery("rental.CarRentalCompany.getCarTypes")
-                                                        .setParameter("name", company)
-                                                        .getResultList();
+            //results = em.createNamedQuery("rental.CarRentalCompany.getCarTypes")
+            //                                            .setParameter("name", company)
+            //                                            .getResultList();
             
             return new HashSet<CarType>(results);
         } catch (IllegalArgumentException ex) {
@@ -86,10 +86,10 @@ public class ManagerSession implements ManagerSessionRemote {
         Set<Reservation> out = new HashSet<Reservation>();
         
         List<CarRentalCompany> companies = null;
-        companies = (List<CarRentalCompany>) em.createQuery("rental.CarRentalCompany.findAllCompanies").getResultList();
-        for(CarRentalCompany d : companies) {
-            out.addAll(d.getReservationsBy(renter));
-    }
+        //companies = (List<CarRentalCompany>) em.createQuery("rental.CarRentalCompany.findAllCompanies").getResultList();
+        //for(CarRentalCompany d : companies) {
+        //    out.addAll(d.getReservationsBy(renter));
+    //}
             return out.size();
     }
 

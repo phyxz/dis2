@@ -2,15 +2,14 @@ package rental;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class CarType implements Serializable{
     
     private String name;
-    
-    private String  cRentalCompanyName;
-
    
     private int nbOfSeats;
     private boolean smokingAllowed;
@@ -20,6 +19,7 @@ public class CarType implements Serializable{
 
     
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     public CarType() {
@@ -120,12 +120,5 @@ public class CarType implements Serializable{
         this.id = id;
     }
     
-     public String getcRentalCompanyName() {
-        return cRentalCompanyName;
-    }
-
-    public void setcRentalCompanyName(String cRentalCompanyName) {
-        this.cRentalCompanyName = cRentalCompanyName;
-    }
     
 }

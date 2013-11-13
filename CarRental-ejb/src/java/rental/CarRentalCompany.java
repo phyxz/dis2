@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
@@ -19,10 +20,12 @@ import javax.persistence.OneToMany;
 
 @Entity
 @NamedQueries({
-    @NamedQuery(name="rental.CarRentalCompany.getCarTypes", 
-        query="SELECT ct FROM CarType ct WHERE ct.cRentalCompanyName = :name"),
-    @NamedQuery(name="rental.CarRentalCompany.getCarIDs", 
-        query="SELECT c.id FROM Car c, CarRentalCompany com IN(com.cars) WHERE c.type = :carType")
+    @NamedQuery(name="rental.CarRentalCompany.getAllCompanies", query="SELECT c.name FROM CarRentalCompany c"),a
+    @NamedQuery(name="rental.CarRentalCompany.getCompany", query="SELECT c FROM CarRentalCOmpany c WHERE c.name = :name")
+    //@NamedQuery(name="rental.CarRentalCompany.getCarTypes", 
+    //   query="SELECT ct FROM CarType ct WHERE ct.cRentalCompanyName = :name"),
+   //@NamedQuery(name="rental.CarRentalCompany.getCarIDs", 
+   //   query="SELECT c.id FROM Car c, CarRentalCompany com IN(com.cars) WHERE c.type = :carType")
 })
 public class CarRentalCompany {
 
@@ -31,10 +34,10 @@ public class CarRentalCompany {
     @Id
     private String name;
    
-    @OneToMany
+    @OneToMany (cascade = CascadeType.PERSIST)
     private List<Car> cars;
     
-    @ManyToMany
+    @ManyToMany (cascade = CascadeType.PERSIST)
     private Set<CarType> carTypes = new HashSet<CarType>();
 
     
@@ -74,6 +77,7 @@ public class CarRentalCompany {
         return carTypes;
     }
 
+    
     public CarType getType(String carTypeName) {
         for(CarType type:carTypes){
             if(type.getName().equals(carTypeName))

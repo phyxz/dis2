@@ -4,10 +4,12 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.annotation.Generated;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -18,10 +20,10 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     
-    @OneToOne
+    @ManyToOne 
     private CarType type;
     
-    @OneToMany
+    @OneToMany (cascade = CascadeType.PERSIST)
     private Set<Reservation> reservations;
 
     
