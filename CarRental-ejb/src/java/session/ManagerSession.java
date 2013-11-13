@@ -74,7 +74,9 @@ public class ManagerSession implements ManagerSessionRemote {
         Set<Reservation> out = new HashSet<Reservation>();
         try {
              CarRentalCompany ccompany = (CarRentalCompany) 
-                    em.createNamedQuery("rental.CarRentalCompany.getCompany").getSingleResult();
+                    em.createNamedQuery("rental.CarRentalCompany.getCompany")
+                            .setParameter("name", company)
+                            .getSingleResult();
             for(Car c: ccompany.getCars(type)){
                 out.addAll(c.getReservations());
             }

@@ -12,6 +12,7 @@ public class Reservation extends Quote {
     private int carId;
     
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     
     

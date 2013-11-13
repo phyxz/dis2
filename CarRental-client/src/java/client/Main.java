@@ -20,12 +20,12 @@ public class Main extends AbstractScriptedTripTest<CarRentalSessionRemote, Manag
         mgr.loadRentalCompany("Dockx", "dockx.csv");
         mgr = m.getNewManagerSession("Hertz","Hertz");
         mgr.loadRentalCompany("Hertz", "hertz.csv");
-        //m.run();
-        CarRentalSessionRemote crs = m.getNewReservationSession("test");
-        for(String s : crs.getAllRentalCompanies()) {
-            System.out.println(s);
-        }
-        
+        m.run();
+//        CarRentalSessionRemote crs = m.getNewReservationSession("test");
+//        for(String s : crs.getAllRentalCompanies()) {
+//            System.out.println(s);
+//        }
+//        
     }
     
     @Override

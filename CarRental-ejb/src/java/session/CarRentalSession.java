@@ -1,13 +1,22 @@
 package session;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+
 import java.util.Set;
+import javax.annotation.Resource;
+import javax.ejb.EJBContext;
+import javax.ejb.EJBException;
 import javax.ejb.Stateful;
+import javax.ejb.TransactionAttribute;
+import static javax.ejb.TransactionAttributeType.REQUIRED;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
 import rental.CarRentalCompany;
 import rental.CarType;
 import rental.Quote;
@@ -21,6 +30,9 @@ public class CarRentalSession implements CarRentalSessionRemote {
     @PersistenceContext
     EntityManager em;
     
+    @Resource 
+    javax.ejb.SessionContext ctx; 
+    
     private String renter;
     private List<Quote> quotes = new LinkedList<Quote>();
 
@@ -33,14 +45,18 @@ public class CarRentalSession implements CarRentalSessionRemote {
     
     @Override
     public List<CarType> getAvailableCarTypes(Date start, Date end) {
-       List<CarType> cartypes = null;
-        //companies = (List<CarType>) em.createNamedQuery("rental.CarRentalCompany.getAllCompanies").getResultList();
+       List<CarType> cartypes = new ArrayList<CarType>();
+        List<CarRentalCompany> companies = (List<CarRentalCompany>) em.createNamedQuery("rental.CarRentalCompany.getAllCompanies").getResultList();
+        for(CarRentalCompany com: companies){
+            cartypes.addAll(com.getAvailableCarTypes(start, end));
+        }
+        
         return cartypes;
     }
 
     @Override
     public Quote createQuote(String company, ReservationConstraints constraints) throws ReservationException {
-        CarRentalCompany crc = (CarRentalCompany) em.createNamedQuery("rental.CarRentalCompany.getAllCompanies")
+        CarRentalCompany crc = (CarRentalCompany) em.createNamedQuery("rental.CarRentalCompany.getCompany")
                                                     .setParameter("name", company)
                                                     .getSingleResult();
         Quote out = crc.createQuote(constraints, renter);
@@ -53,17 +69,22 @@ public class CarRentalSession implements CarRentalSessionRemote {
         return quotes;
     }
 
+    @TransactionAttribute(REQUIRED) 
     @Override
     public List<Reservation> confirmQuotes() throws ReservationException {
-        List<Reservation> done = new LinkedList<Reservation>();
+
+        List<Reservation> done = new ArrayList<Reservation>();
         try {
             for (Quote quote : quotes) {
-               // done.add(Loader.getRental(quote.getRentalCompany()).confirmQuote(quote));
+                String crcname = quote.getRentalCompany();
+                
+                CarRentalCompany c = (CarRentalCompany) em.createNamedQuery("rental.CarRentalCompany.getCompany")
+                        .setParameter("name", crcname)
+                        .getSingleResult();
+               c.confirmQuote(quote);
             }
         } catch (Exception e) {
-            //for(Reservation r:done)
-              //  Loader.getRental(r.getRentalCompany()).cancelReservation(r);
-            throw new ReservationException();
+            throw new EJBException("Transaction Failed" + e.getMessage());
         }
         return done;
     }
